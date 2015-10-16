@@ -800,3 +800,24 @@ public extension String {
         return name.rawValue.substringToIndex(name.rawValue.startIndex.advancedBy(1))
     }
 }
+
+public extension UIImage {
+    public static func ioniconWithName(name: Ionicon, textColor: UIColor, size: CGSize) -> UIImage {
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        paragraph.alignment = .Center
+        let attributedString = NSAttributedString(string: String.ioniconWithName(name) as String, attributes: [NSFontAttributeName: UIFont.fontAwesomeOfSize(max(size.width, size.height)), NSForegroundColorAttributeName: textColor, NSParagraphStyleAttributeName:paragraph])
+        let size = attributedString.sizeWithMaxWidth(size.width)
+        UIGraphicsBeginImageContextWithOptions(size, false , 0.0)
+        attributedString.drawInRect(CGRectMake(0, 0, size.width, size.height))
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
+}
+
+private extension NSAttributedString {
+    func sizeWithMaxWidth(maxWidth: CGFloat) -> CGSize {
+        return self.boundingRectWithSize(CGSizeMake(maxWidth, 1000), options:(NSStringDrawingOptions.UsesLineFragmentOrigin), context: nil).size
+    }
+}
